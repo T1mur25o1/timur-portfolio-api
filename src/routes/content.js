@@ -1,44 +1,44 @@
 import { Router } from "express";
 import db from "../db.js";
 import { requireAdmin } from "../middleware/auth.js";
+import { asyncHandler } from "../middleware/asyncHandler.js";
+import { sanitize, schemas, rules } from "../validate.js";
 
 const router = Router();
 
-router.get("/", async (_req, res) => {
-  await db.read();
-  res.json(db.data);
-});
+router.get(
+  "/",
+  asyncHandler(async (_req, res) => {
+    await db.read();
+    res.json(db.data);
+  }),
+);
 
-router.put("/hero", requireAdmin, async (req, res) => {
-  await db.read();
-  db.data.hero = { ...db.data.hero, ...req.body };
-  await db.write();
-  res.json(db.data.hero);
-});
+/** PUT handler that merges validated fields into one section of the document. */
+function updateSection(section) {
+  return asyncHandler(async (req, res) => {
+    const patch = sanitize(req.body, schemas[section]);
+    await db.read();
+    db.data[section] = { ...db.data[section], ...patch };
+    await db.write();
+    res.json(db.data[section]);
+  });
+}
 
-router.put("/about", requireAdmin, async (req, res) => {
-  await db.read();
-  db.data.about = { ...db.data.about, ...req.body };
-  await db.write();
-  res.json(db.data.about);
-});
+router.put("/hero", requireAdmin, updateSection("hero"));
+router.put("/about", requireAdmin, updateSection("about"));
+router.put("/contact", requireAdmin, updateSection("contact"));
 
-router.put("/contact", requireAdmin, async (req, res) => {
-  await db.read();
-  db.data.contact = { ...db.data.contact, ...req.body };
-  await db.write();
-  res.json(db.data.contact);
-});
-
-router.put("/skills", requireAdmin, async (req, res) => {
-  const { skills } = req.body || {};
-  if (!Array.isArray(skills)) {
-    return res.status(400).json({ error: "skills must be an array of strings" });
-  }
-  await db.read();
-  db.data.skills = skills.filter((s) => typeof s === "string" && s.trim().length > 0);
-  await db.write();
-  res.json(db.data.skills);
-});
+router.put(
+  "/skills",
+  requireAdmin,
+  asyncHandler(async (req, res) => {
+    const skills = rules.stringArray(60, 40)(req.body?.skills, "skills");
+    await db.read();
+    db.data.skills = skills;
+    await db.write();
+    res.json(db.data.skills);
+  }),
+);
 
 export default router;

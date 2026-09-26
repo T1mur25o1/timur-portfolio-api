@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import store from "./mongoStore.js";
+import { contentStore as store } from "./store.js";
 
 const defaultData = {
   hero: {
@@ -16,6 +16,9 @@ const defaultData = {
   },
   about: {
     eyebrow: "Whoami",
+    major: "Cyber Security",
+    university: "New Uzbekistan University",
+    status: "available",
     heading: "Securing systems by day, building products by night.",
     paragraph:
       "I'm a Cyber Security major who codes across the whole stack. That combination means I don't just ship features — I think about how they can break, who might attack them, and how to build them right the first time. Outside of coursework I design full websites, build Telegram bots that automate real workflows, and write Expert Advisors and custom indicators for MetaTrader.",
@@ -139,7 +142,7 @@ const defaultData = {
 export async function initDb() {
   await store.read();
   if (!store.data) {
-    store.data = defaultData;
+    store.data = structuredClone(defaultData);
     await store.write();
   }
   return store;

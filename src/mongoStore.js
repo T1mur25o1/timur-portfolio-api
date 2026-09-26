@@ -10,52 +10,79 @@ dns.setDefaultResultOrder("ipv4first");
 const DOC_ID = "content";
 
 let client;
-let collection;
+let db;
 let connecting;
 
-async function connect() {
-  if (collection) return collection;
+/**
+ * Connects once and returns the Db handle. Fails fast (10s) instead of the
+ * driver's 30s default so a bad MONGODB_URI is reported quickly at startup.
+ */
+export async function getDb() {
+  if (db) return db;
   if (!connecting) {
     const uri = process.env.MONGODB_URI;
     if (!uri) {
       throw new Error(
-        "MONGODB_URI is not set. Create a free MongoDB Atlas cluster and put its connection string in .env."
+        "MONGODB_URI is not set. Create a free MongoDB Atlas cluster and put its connection string in .env.",
       );
     }
-    client = new MongoClient(uri);
-    connecting = client.connect().then(() => {
-      const dbName = process.env.MONGODB_DB || "portfolio";
-      collection = client.db(dbName).collection("site");
-      return collection;
-    });
+    client = new MongoClient(uri, { serverSelectionTimeoutMS: 10_000 });
+    connecting = client
+      .connect()
+      .then(() => {
+        db = client.db(process.env.MONGODB_DB || "portfolio");
+        return db;
+      })
+      .catch((err) => {
+        connecting = null; // allow a retry on the next request
+        throw err;
+      });
   }
   return connecting;
 }
 
 /**
- * Drop-in replacement for the old lowdb-backed store: same `.data` /
- * `.read()` / `.write()` shape, but persisted to a single MongoDB document
- * instead of a local JSON file. Routes elsewhere in the app don't need to
- * know the difference.
+ * Same `.data` / `.read()` / `.write()` shape as the old lowdb store, but
+ * persisted to a single MongoDB document instead of a local JSON file.
  */
-const store = {
+const contentStore = {
   data: null,
 
   async read() {
-    const col = await connect();
+    const col = (await getDb()).collection("site");
     const doc = await col.findOne({ _id: DOC_ID });
     this.data = doc ? doc.value : null;
     return this.data;
   },
 
   async write() {
-    const col = await connect();
-    await col.updateOne(
-      { _id: DOC_ID },
-      { $set: { value: this.data } },
-      { upsert: true }
-    );
+    const col = (await getDb()).collection("site");
+    await col.updateOne({ _id: DOC_ID }, { $set: { value: this.data } }, { upsert: true });
   },
 };
 
-export default store;
+/** Contact-form messages, one document per message. */
+const messageStore = {
+  async insert(message) {
+    const col = (await getDb()).collection("messages");
+    await col.insertOne({ _id: message.id, ...message });
+    return message;
+  },
+  async list() {
+    const col = (await getDb()).collection("messages");
+    const docs = await col.find({}).sort({ createdAt: -1 }).limit(500).toArray();
+    return docs.map(({ _id, ...rest }) => rest);
+  },
+  async update(id, patch) {
+    const col = (await getDb()).collection("messages");
+    const res = await col.updateOne({ _id: id }, { $set: patch });
+    return res.matchedCount > 0;
+  },
+  async remove(id) {
+    const col = (await getDb()).collection("messages");
+    const res = await col.deleteOne({ _id: id });
+    return res.deletedCount > 0;
+  },
+};
+
+export default { content: contentStore, messages: messageStore };

@@ -127,3 +127,32 @@ textarea.field-input { resize: vertical; min-height: 90px; }
 .toast.show { opacity: 1; transform: translateY(0); }
 .toast.success { background: rgba(74,222,128,0.15); border: 1px solid rgba(74,222,128,0.4); color: #4ade80; }
 .toast.error { background: rgba(248,113,113,0.15); border: 1px solid rgba(248,113,113,0.4); color: #f87171; }
+
+/* Contact form honeypot: off-screen for people, still in the DOM for bots. */
+.hp-field { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+
+/* Project link buttons */
+.project-link {
+  display: inline-flex; align-items: center; gap: 6px; border-radius: 9999px;
+  border: 1px solid rgba(148,163,184,0.3); padding: 6px 14px; font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; color: #cbd5e1; transition: border-color .2s ease, color .2s ease;
+}
+.project-link:hover { border-color: #22d3ee; color: #22d3ee; }
+
+/* Admin: unread messages badge + message cards */
+.unread-badge {
+  margin-left: auto; min-width: 20px; padding: 1px 7px; border-radius: 9999px;
+  background: #22d3ee; color: #04050a; font-size: 11px; font-weight: 600; text-align: center;
+}
+.message-card.unread { border-color: rgba(34,211,238,0.45); }
+.field-warning { margin-top: 6px; font-size: 12px; color: #fbbf24; }
+
+/* Respect the OS "reduce motion" setting: no looping animations, no
+   scroll-reveal slide-ins, skills shown as a static wrapped list. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .reveal { opacity: 1; transform: none; }
+  #matrix-canvas { display: none; }
+  .animate-marquee { width: auto; flex-wrap: wrap; justify-content: center; padding: 0 24px; }
+}

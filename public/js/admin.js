@@ -124,6 +124,7 @@ async function loadAll() {
     fillContactForm(currentData.contact);
     renderServicesList(currentData.services);
     renderProjectsList(currentData.projects);
+    await loadMessages();
   } catch (err) {
     showToast(err.message, "error");
   }
@@ -148,7 +149,10 @@ document.getElementById("hero-form").addEventListener("submit", async (e) => {
       body: JSON.stringify({
         badge: form.badge.value,
         name: form.name.value,
-        roles: form.roles.value.split("\n").map((r) => r.trim()).filter(Boolean),
+        roles: form.roles.value
+          .split("\n")
+          .map((r) => r.trim())
+          .filter(Boolean),
         description: form.description.value,
       }),
     });
@@ -165,6 +169,9 @@ function fillAboutForm(about) {
   form.eyebrow.value = about.eyebrow || "";
   form.heading.value = about.heading || "";
   form.paragraph.value = about.paragraph || "";
+  form.major.value = about.major || "";
+  form.university.value = about.university || "";
+  form.status.value = about.status || "";
 
   const statsWrap = document.getElementById("stats-fields");
   const stats = about.stats && about.stats.length ? about.stats : [{}, {}, {}, {}];
@@ -174,7 +181,7 @@ function fillAboutForm(about) {
       <div class="space-y-2">
         <input class="field-input" data-stat="${i}" data-field="label" placeholder="Label" value="${esc(s.label || "")}" />
         <input class="field-input" data-stat="${i}" data-field="value" placeholder="Value" value="${esc(s.value || "")}" />
-      </div>`
+      </div>`,
     )
     .join("");
 }
@@ -183,7 +190,7 @@ document.getElementById("about-form").addEventListener("submit", async (e) => {
   e.preventDefault();
   const form = e.target;
   const stats = [];
-  document.querySelectorAll('#stats-fields [data-stat]').forEach((input) => {
+  document.querySelectorAll("#stats-fields [data-stat]").forEach((input) => {
     const idx = Number(input.dataset.stat);
     stats[idx] = stats[idx] || {};
     stats[idx][input.dataset.field] = input.value;
@@ -195,6 +202,9 @@ document.getElementById("about-form").addEventListener("submit", async (e) => {
         eyebrow: form.eyebrow.value,
         heading: form.heading.value,
         paragraph: form.paragraph.value,
+        major: form.major.value,
+        university: form.university.value,
+        status: form.status.value,
         stats,
       }),
     });
@@ -216,7 +226,8 @@ function fillSkills(skills) {
 function renderSkillsChips() {
   document.getElementById("skills-chips").innerHTML = skillsDraft
     .map(
-      (s, i) => `<span class="chip">${esc(s)} <button type="button" data-remove="${i}">&times;</button></span>`
+      (s, i) =>
+        `<span class="chip">${esc(s)} <button type="button" data-remove="${i}">&times;</button></span>`,
     )
     .join("");
 }
@@ -267,6 +278,21 @@ function fillContactForm(contact) {
   form.telegram.value = contact.telegram || "";
   form.github.value = contact.github || "";
   form.linkedin.value = contact.linkedin || "";
+  flagPlaceholders(form);
+}
+
+/** Highlight fields that still hold template values like "yourhandle". */
+function flagPlaceholders(form) {
+  form.querySelectorAll(".field-warning").forEach((el) => el.remove());
+  for (const input of form.querySelectorAll("input")) {
+    if (/yourhandle|example\.com/i.test(input.value)) {
+      const warn = document.createElement("p");
+      warn.className = "field-warning";
+      warn.textContent =
+        "This still looks like a placeholder — replace it or clear it (empty links are hidden on the site).";
+      input.after(warn);
+    }
+  }
 }
 
 document.getElementById("contact-form").addEventListener("submit", async (e) => {
@@ -282,6 +308,7 @@ document.getElementById("contact-form").addEventListener("submit", async (e) => 
         linkedin: form.linkedin.value,
       }),
     });
+    flagPlaceholders(form);
     showToast("Contact info saved");
   } catch (err) {
     showToast(err.message, "error");
@@ -290,7 +317,16 @@ document.getElementById("contact-form").addEventListener("submit", async (e) => 
 
 // --- Generic collection manager (services / projects) ----------------------
 
-function makeCollectionManager({ endpoint, listId, formId, formTitleId, newBtnId, cancelBtnId, extraFields, cardRenderer }) {
+function makeCollectionManager({
+  endpoint,
+  listId,
+  formId,
+  formTitleId,
+  newBtnId,
+  cancelBtnId,
+  extraFields,
+  cardRenderer,
+}) {
   const listEl = document.getElementById(listId);
   const formEl = document.getElementById(formId);
   const formTitleEl = document.getElementById(formTitleId);
@@ -325,7 +361,9 @@ function makeCollectionManager({ endpoint, listId, formId, formTitleId, newBtnId
     const editBtn = e.target.closest("[data-edit]");
     const delBtn = e.target.closest("[data-delete]");
     if (editBtn) {
-      const item = currentData[endpoint.split("/").pop()].find((x) => x.id === editBtn.dataset.edit);
+      const item = currentData[endpoint.split("/").pop()].find(
+        (x) => x.id === editBtn.dataset.edit,
+      );
       openForm(item);
     }
     if (delBtn) {
@@ -348,7 +386,10 @@ function makeCollectionManager({ endpoint, listId, formId, formTitleId, newBtnId
       description: formEl.description.value,
       icon: formEl.icon.value,
       color: formEl.color.value,
-      tags: formEl.tags.value.split(",").map((t) => t.trim()).filter(Boolean),
+      tags: formEl.tags.value
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean),
     };
     extraFields.forEach((field) => {
       if (formEl[field]) payload[field] = formEl[field].value;
@@ -369,9 +410,7 @@ function makeCollectionManager({ endpoint, listId, formId, formTitleId, newBtnId
   });
 
   return function render(items) {
-    listEl.innerHTML = (items || [])
-      .map((item) => cardRenderer(item))
-      .join("");
+    listEl.innerHTML = (items || []).map((item) => cardRenderer(item)).join("");
   };
 }
 
@@ -385,7 +424,7 @@ function collectionCard(item, extraLabel) {
           <span class="text-sm font-semibold text-white truncate">${esc(item.title)}</span>
           ${extraLabel ? `<span class="font-mono text-[11px] ${c.text}">${esc(extraLabel(item))}</span>` : ""}
         </div>
-        <p class="text-xs text-slate-500 truncate">${esc(item.description)}</p>
+        <p class="text-xs text-slate-400 truncate">${esc(item.description)}</p>
       </div>
       <div class="flex items-center gap-2 shrink-0">
         <button type="button" class="btn-secondary !py-1.5 !px-3 text-xs" data-edit="${item.id}">Edit</button>
@@ -412,8 +451,84 @@ const renderProjectsList = makeCollectionManager({
   formTitleId: "project-form-title",
   newBtnId: "new-project-btn",
   cancelBtnId: "cancel-project-btn",
-  extraFields: ["category"],
+  extraFields: ["category", "repoUrl", "demoUrl"],
   cardRenderer: (item) => collectionCard(item, (i) => i.category),
+});
+
+// --- Messages (contact form inbox) -------------------------------------------
+
+const messagesList = document.getElementById("messages-list");
+const unreadBadge = document.getElementById("unread-badge");
+let messages = [];
+
+function formatDate(iso) {
+  const d = new Date(iso);
+  return isNaN(d) ? "" : d.toLocaleString();
+}
+
+function renderMessages() {
+  const unread = messages.filter((m) => !m.read).length;
+  unreadBadge.textContent = String(unread);
+  unreadBadge.classList.toggle("hidden", unread === 0);
+
+  if (messages.length === 0) {
+    messagesList.innerHTML =
+      '<p class="glass rounded-xl p-6 text-sm text-slate-400">No messages yet. They will appear here when someone uses the contact form on your site.</p>';
+    return;
+  }
+  messagesList.innerHTML = messages
+    .map(
+      (m) => `
+      <div class="glass message-card rounded-xl p-5 border ${m.read ? "" : "unread"}">
+        <div class="flex flex-wrap items-baseline justify-between gap-2">
+          <div class="min-w-0">
+            <span class="text-sm font-semibold text-white">${esc(m.name)}</span>
+            <a class="ml-2 font-mono text-xs text-neon-cyan hover:underline" href="mailto:${esc(m.email)}">${esc(m.email)}</a>
+          </div>
+          <span class="font-mono text-[11px] text-slate-400">${esc(formatDate(m.createdAt))}</span>
+        </div>
+        <p class="mt-3 whitespace-pre-wrap text-sm text-slate-300">${esc(m.message)}</p>
+        <div class="mt-4 flex gap-2">
+          <button type="button" class="btn-secondary !py-1.5 !px-3 text-xs" data-toggle-read="${esc(m.id)}">${m.read ? "Mark unread" : "Mark read"}</button>
+          <button type="button" class="btn-danger" data-delete-message="${esc(m.id)}">Delete</button>
+        </div>
+      </div>`,
+    )
+    .join("");
+}
+
+async function loadMessages() {
+  messages = await api("/api/messages");
+  renderMessages();
+}
+
+document
+  .getElementById("refresh-messages-btn")
+  .addEventListener("click", () => loadMessages().catch((err) => showToast(err.message, "error")));
+
+messagesList.addEventListener("click", async (e) => {
+  const toggleBtn = e.target.closest("[data-toggle-read]");
+  const delBtn = e.target.closest("[data-delete-message]");
+  try {
+    if (toggleBtn) {
+      const msg = messages.find((m) => m.id === toggleBtn.dataset.toggleRead);
+      await api(`/api/messages/${msg.id}`, {
+        method: "PUT",
+        body: JSON.stringify({ read: !msg.read }),
+      });
+      msg.read = !msg.read;
+      renderMessages();
+    }
+    if (delBtn) {
+      if (!confirm("Delete this message? This can't be undone.")) return;
+      await api(`/api/messages/${delBtn.dataset.deleteMessage}`, { method: "DELETE" });
+      messages = messages.filter((m) => m.id !== delBtn.dataset.deleteMessage);
+      renderMessages();
+      showToast("Message deleted");
+    }
+  } catch (err) {
+    showToast(err.message, "error");
+  }
 });
 
 checkAuth();

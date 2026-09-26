@@ -5,27 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Timur — Full-Stack Dev &amp; Cyber Security Analyst</title>
 <meta name="description" content="Timur — Cyber Security student at New Uzbekistan University. Full-stack developer, cyber security analyst, Telegram bot maker, and trading EA/indicator developer." />
-<link rel="icon" href="data:,">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#04050a">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Timur — Full-Stack Dev &amp; Cyber Security Analyst">
+<meta property="og:description" content="__OG_DESCRIPTION__">
+<meta property="og:url" content="__SITE_ORIGIN__/">
+<meta property="og:image" content="__SITE_ORIGIN__/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-  tailwind.config = {
-    theme: {
-      extend: {
-        colors: {
-          void: { 950: "#04050a", 900: "#080a14", 800: "#0d1020", 700: "#12162a" },
-          neon: { cyan: "#22d3ee", violet: "#a78bfa", fuchsia: "#e879f9", green: "#4ade80" },
-        },
-        fontFamily: {
-          display: ["'Space Grotesk'", "sans-serif"],
-          mono: ["'JetBrains Mono'", "monospace"],
-          sans: ["'Inter'", "sans-serif"],
-        },
-      },
-    },
-  };
-</script>
+<link rel="stylesheet" href="/css/tailwind.css" />
 <link rel="stylesheet" href="/css/site.css" />
 </head>
 <body class="bg-void-950">
@@ -47,7 +40,7 @@
       <a href="#contact" class="nav-link text-slate-300 hover:text-neon-cyan transition-colors">Contact</a>
     </nav>
     <a href="#contact" class="hidden md:inline-flex items-center rounded-full border border-neon-cyan/50 px-4 py-2 text-sm font-mono text-neon-cyan hover:bg-neon-cyan/10 hover:shadow-glow transition-all">Let's talk</a>
-    <button id="menu-btn" class="md:hidden text-slate-200" aria-label="Toggle menu">
+    <button id="menu-btn" class="md:hidden text-slate-200" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
     </button>
   </div>
@@ -86,7 +79,7 @@
       Hi, I'm <span id="hero-name" class="text-gradient">…</span>
     </h1>
 
-    <div class="reveal mt-5 flex h-8 items-center justify-center font-mono text-lg text-slate-300 sm:text-xl">
+    <div class="reveal mt-5 flex min-h-8 items-center justify-center font-mono text-lg text-slate-300 sm:text-xl">
       <span>&gt;&nbsp;</span>
       <span id="typewriter" class="text-neon-cyan"></span>
       <span class="caret"></span>
@@ -102,7 +95,7 @@
     <div class="reveal mt-10 flex items-center justify-center gap-5 text-slate-400" id="hero-socials"></div>
   </div>
 
-  <a href="#about" class="absolute bottom-8 left-1/2 -translate-x-1/2 text-slate-500 hover:text-neon-cyan transition-colors animate-float" aria-label="Scroll down">
+  <a href="#about" class="absolute bottom-8 left-1/2 -translate-x-1/2 text-slate-400 hover:text-neon-cyan transition-colors animate-float" aria-label="Scroll down">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
   </a>
 </section>
@@ -118,10 +111,10 @@
     </div>
 
     <div class="grid items-center gap-14 lg:grid-cols-2">
-      <div class="reveal relative mx-auto w-full max-w-sm">
+      <div class="reveal relative mx-auto w-full min-w-0 max-w-sm">
         <div class="absolute -inset-4 rounded-3xl bg-gradient-to-br from-neon-cyan/20 via-neon-violet/10 to-neon-fuchsia/20 blur-2xl"></div>
         <div class="glass glow-card relative rounded-3xl p-8">
-          <div class="flex items-center justify-between font-mono text-xs text-slate-500">
+          <div class="flex items-center justify-between font-mono text-xs text-slate-400">
             <span>about.json</span>
             <span class="flex gap-1.5">
               <span class="h-2.5 w-2.5 rounded-full bg-red-400/70"></span>
@@ -136,7 +129,7 @@
       <div class="reveal">
         <div class="flex items-center gap-3 font-mono text-sm text-neon-cyan">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></svg>
-          Cyber Security @ New Uzbekistan University
+          <span id="about-affiliation">Cyber Security @ New Uzbekistan University</span>
         </div>
         <h3 id="about-heading" class="mt-4 font-display text-2xl font-semibold text-white sm:text-3xl"></h3>
         <p id="about-paragraph" class="mt-5 text-slate-400"></p>
@@ -206,11 +199,36 @@
     </div>
 
     <div class="reveal glass glow-card mx-auto max-w-2xl rounded-3xl p-8 sm:p-10">
+      <form id="contact-form" class="grid gap-4 text-left" novalidate>
+        <div class="grid gap-4 sm:grid-cols-2">
+          <label class="block">
+            <span class="field-label">Your name</span>
+            <input name="name" class="field-input" autocomplete="name" maxlength="100" required />
+          </label>
+          <label class="block">
+            <span class="field-label">Your email</span>
+            <input name="email" type="email" class="field-input" autocomplete="email" maxlength="200" required />
+          </label>
+        </div>
+        <label class="block">
+          <span class="field-label">Message</span>
+          <textarea name="message" class="field-input" rows="5" minlength="10" maxlength="4000" required placeholder="What are you building? A website, a bot, a security review, a trading tool…"></textarea>
+        </label>
+        <!-- Honeypot: hidden from people, filled in by bots. -->
+        <label class="hp-field" aria-hidden="true">Website <input name="website" tabindex="-1" autocomplete="off" /></label>
+        <div class="flex flex-wrap items-center gap-4">
+          <button type="submit" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-neon-cyan via-neon-violet to-neon-fuchsia px-8 py-3.5 font-semibold text-void-950 shadow-glow transition-transform hover:scale-[1.03] disabled:opacity-60 disabled:hover:scale-100">
+            Send message
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </button>
+          <p id="contact-status" class="text-sm" role="status" aria-live="polite"></p>
+        </div>
+      </form>
+
+      <div class="my-8 flex items-center gap-4 font-mono text-xs text-slate-400">
+        <span class="h-px flex-1 bg-slate-800"></span>or reach me directly<span class="h-px flex-1 bg-slate-800"></span>
+      </div>
       <div id="contact-channels" class="grid gap-4 sm:grid-cols-2"></div>
-      <a id="contact-cta" href="#" class="mt-8 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-neon-cyan via-neon-violet to-neon-fuchsia px-8 py-3.5 font-semibold text-void-950 shadow-glow transition-transform hover:scale-[1.03]">
-        Send a message
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-      </a>
     </div>
   </div>
 </section>
@@ -219,27 +237,25 @@
 <footer class="relative border-t border-slate-900 py-10">
   <div class="mx-auto flex max-w-6xl flex-col items-center gap-4 px-6 text-center sm:flex-row sm:justify-between sm:text-left">
     <a href="#home" class="flex items-center gap-2">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5 text-neon-cyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8l3 3-3 3M13 14h5"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-[18px] w-[18px] text-neon-cyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8l3 3-3 3M13 14h5"/></svg>
       <span class="font-display text-sm font-semibold text-white">Timur<span class="text-neon-cyan">.dev</span></span>
     </a>
-    <p class="font-mono text-xs text-slate-500" id="footer-year"></p>
-    <div class="flex items-center gap-4 text-slate-500">
-      <a href="#" class="hover:text-neon-cyan transition-colors" aria-label="Admin login" title="Admin login">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 opacity-40 hover:opacity-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" onclick="window.location.href='/admin.html'" style="cursor:pointer"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>
-      </a>
+    <p class="font-mono text-xs text-slate-400" id="footer-year"></p>
+    <div class="flex items-center gap-4 text-slate-400">
       <a id="social-github" href="#" aria-label="GitHub" class="hover:text-neon-cyan transition-colors" target="_blank" rel="noreferrer">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.98 5.24.98 11.52c0 4.94 3.2 9.13 7.65 10.6.56.1.76-.24.76-.54 0-.27-.01-1.15-.02-2.09-3.11.68-3.77-1.34-3.77-1.34-.5-1.29-1.24-1.63-1.24-1.63-1.01-.7.08-.68.08-.68 1.12.08 1.71 1.16 1.71 1.16.99 1.71 2.6 1.21 3.24.93.1-.72.39-1.21.71-1.49-2.49-.28-5.1-1.24-5.1-5.55 0-1.23.44-2.23 1.16-3.02-.12-.28-.5-1.42.11-2.96 0 0 .95-.3 3.1 1.16.9-.25 1.87-.37 2.83-.38.96 0 1.93.13 2.83.38 2.15-1.46 3.1-1.16 3.1-1.16.61 1.54.23 2.68.11 2.96.72.79 1.16 1.79 1.16 3.02 0 4.32-2.62 5.27-5.11 5.55.4.35.76 1.03.76 2.08 0 1.5-.01 2.71-.01 3.08 0 .3.2.65.77.54 4.44-1.48 7.64-5.66 7.64-10.6C23.02 5.24 18.27.5 12 .5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.98 5.24.98 11.52c0 4.94 3.2 9.13 7.65 10.6.56.1.76-.24.76-.54 0-.27-.01-1.15-.02-2.09-3.11.68-3.77-1.34-3.77-1.34-.5-1.29-1.24-1.63-1.24-1.63-1.01-.7.08-.68.08-.68 1.12.08 1.71 1.16 1.71 1.16.99 1.71 2.6 1.21 3.24.93.1-.72.39-1.21.71-1.49-2.49-.28-5.1-1.24-5.1-5.55 0-1.23.44-2.23 1.16-3.02-.12-.28-.5-1.42.11-2.96 0 0 .95-.3 3.1 1.16.9-.25 1.87-.37 2.83-.38.96 0 1.93.13 2.83.38 2.15-1.46 3.1-1.16 3.1-1.16.61 1.54.23 2.68.11 2.96.72.79 1.16 1.79 1.16 3.02 0 4.32-2.62 5.27-5.11 5.55.4.35.76 1.03.76 2.08 0 1.5-.01 2.71-.01 3.08 0 .3.2.65.77.54 4.44-1.48 7.64-5.66 7.64-10.6C23.02 5.24 18.27.5 12 .5Z"/></svg>
       </a>
       <a id="social-telegram" href="#" aria-label="Telegram" class="hover:text-neon-cyan transition-colors" target="_blank" rel="noreferrer">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5" viewBox="0 0 24 24" fill="currentColor"><path d="M21.94 4.6 3.6 11.86c-1.24.5-1.23 1.19-.22 1.5l4.7 1.47 1.8 5.5c.22.6.4.85.82.85.4 0 .58-.18.8-.4l1.94-1.87 4.03 2.97c.74.41 1.28.2 1.47-.68l2.66-12.5c.28-1.1-.42-1.6-1.06-1.2Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="currentColor"><path d="M21.94 4.6 3.6 11.86c-1.24.5-1.23 1.19-.22 1.5l4.7 1.47 1.8 5.5c.22.6.4.85.82.85.4 0 .58-.18.8-.4l1.94-1.87 4.03 2.97c.74.41 1.28.2 1.47-.68l2.66-12.5c.28-1.1-.42-1.6-1.06-1.2Z"/></svg>
       </a>
       <a id="social-linkedin" href="#" aria-label="LinkedIn" class="hover:text-neon-cyan transition-colors" target="_blank" rel="noreferrer">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29ZM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12ZM7.12 20.45H3.56V9h3.56v11.45Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29ZM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12ZM7.12 20.45H3.56V9h3.56v11.45Z"/></svg>
       </a>
     </div>
   </div>
 </footer>
 
+<!--INITIAL_CONTENT-->
 <script type="module" src="/js/site.js"></script>
 </body>
 </html>

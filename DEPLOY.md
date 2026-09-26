@@ -59,6 +59,13 @@ git push -u origin main
    | `JWT_SECRET` | any long random string |
    | `ADMIN_PASSWORD_HASH` | run `node scripts/hash-password.js "your-password"` locally and paste the output |
 
+   Optional:
+
+   | Key | Value |
+   |---|---|
+   | `SITE_URL` | your public URL, e.g. `https://your-app.onrender.com` (used for link-preview images) |
+   | `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID` | get a Telegram message for every contact-form submission (see `.env.example`) |
+
    (Render sets `PORT` automatically — the app already reads
    `process.env.PORT`, so leave it unset.)
 
